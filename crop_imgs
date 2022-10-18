@@ -1,0 +1,51 @@
+#cortar una sola imagen
+"""
+import cv2
+
+path=" "
+file="0005.jpg"
+fileb="0005_crop.jpg"
+
+img = cv2.imread(path+file)
+crop_img = img[100:500, 0:1920]
+cv2.imwrite(path + fileb, crop_img)
+print('Done')
+"""
+
+#para cortar imagenes de todo un directorio
+
+import cv2
+import os
+import time
+
+def cropfile(pathin, pathout, x, y, w, h):
+    img = cv2.imread(pathin)
+    crop_img = img[y:h, x:w]
+    cv2.imwrite(pathout, crop_img)
+
+def ls1(path):    
+    return [obj.name for obj in os.scandir(path) if obj.is_file()]
+
+def splitfilename(filename):
+    sname=""
+    sext=""
+    i=filename.rfind(".")
+    if(i!=0):
+        n=len(filename)
+        j=n-i-1
+        sname=filename[0:i]
+        sext=filename[-j:]    
+    return sext, sname
+
+
+path=" "
+files=ls1(path)
+t1 = time.process_time()
+for file in files:
+    filea=path + file # archivo original
+    sext, sfilename = splitfilename(file)    
+    filec=path + "crop/" + sfilename + "_crop" + ".jpg" # archivo crop    
+    cropfile(filea, filec, 0, 0, 1920, 618) #Aquí van las dimensiones x, y, w, h.
+t2 = time.process_time()
+
+print("elapsed_time_model:",t2-t1)
